@@ -13,6 +13,14 @@ namespace EmployeeWebApiProject.Controllers
     {
         private AppDbContext db = new AppDbContext();
 
+        // /Employees/ActiveEmployees
+        public ActionResult ActiveEmployees()
+        {
+            List<Employee> employees = db.Employees.Where(e => e.Active).ToList();
+            return Json(employees, JsonRequestBehavior.AllowGet);
+        }
+
+        // /Employees/List
         public ActionResult List()
         {
             return Json(db.Employees.ToList(), JsonRequestBehavior.AllowGet); // this goes in every controller for the PRS
@@ -50,6 +58,28 @@ namespace EmployeeWebApiProject.Controllers
                 return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
             }
             return Json(new JsonMessage("Success", "Employee was created.")); // add to this return the employee generated Id
+        }
+
+        // /Employees/Change [POST]
+        public ActionResult Change([FromBody] Employee employee)
+        {
+            Employee tempEmployee = db.Employees.Find(employee.Id);
+            if (tempEmployee == null)
+            {
+                return Json(new JsonMessage("Failure", "Record to be changed has been deleted"), JsonRequestBehavior.AllowGet);
+            }
+            tempEmployee.Name = employee.Name;
+            tempEmployee.Salary = employee.Salary;
+            tempEmployee.Active = employee.Active;
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+            }
+            return Json(new JsonMessage("Success", "Employee was changed."));
         }
 
         // /Employees/Remove/5

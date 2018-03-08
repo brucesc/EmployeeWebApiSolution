@@ -15,5 +15,17 @@ namespace EmployeeWebApiProject.Utility
             this.Result = result;
             this.Message = message;
         }
+
+        //public TryCatchOnSave()
+        //{
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new JsonMessage("Failure", ex.Message), JsonRequestBehavior.AllowGet);
+        //    }
+        //}
     }
 }
